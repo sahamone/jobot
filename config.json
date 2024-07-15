@@ -1,0 +1,12 @@
+{
+    "selfConf" : {
+        "version" : "v0.1"
+    },
+    "roles" : {
+        "memberRoleId" : 818913086026022943,
+        "videasteRoleId" : 806590612651376650,
+        "profRoleId" : 826743855121432607,
+        "adminRoleId" : 814811479278223360,
+        "alertChannelId" : 1081578082265223219
+    }
+}
