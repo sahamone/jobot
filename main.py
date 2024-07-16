@@ -31,8 +31,11 @@ async def on_ready():
         await message.edit(view = access.Access(bot))
 
 
-    message = await bot.get_channel(config.get_config()["roles"]["alertChannelId"]).fetch_message(db["init"][1])
-    print("done !")
+    try :
+        message = await bot.get_channel(db['init'][0]).fetch_message(db["init"][1])
+        print("done !")
+    except :
+        print("Unable to fetch init message !")
     print(f'{bot.user} has connected to Discord!')
 
 

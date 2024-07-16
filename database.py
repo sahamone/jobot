@@ -28,7 +28,7 @@ async def add_message(id : int, authorId : int) -> None :
 async def is_waiting(id : int) -> bool :
     if database == None :
         await get_database()
-    return str(id) in database["messages"]
+    return str(id) in database["messages"].values()
 
 async def remove_message(id : int, authorId : int) -> None :
     if database == None :

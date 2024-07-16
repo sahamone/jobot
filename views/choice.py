@@ -13,7 +13,7 @@ class Choice(discord.ui.View):
 
     @discord.ui.button(label = "Vidéaste", style = discord.ButtonStyle.primary, emoji = "🎥")
     async def on_videaste_callback(self, button, interaction):
-        if database.is_waiting(interaction.user.id) :
+        if await database.is_waiting(interaction.user.id) :
             embed = discord.Embed(
                 title = "Erreur",
                 description = "Vous ne pouvez pas adresser d'autres demandes d'accès tant que votre précédente demande est toujours en cours de vérification !",
@@ -22,18 +22,20 @@ class Choice(discord.ui.View):
 
             await interaction.response.send_message(embed = embed, ephemeral = True)
             
-        channel = self.bot.get_channel(self.config.get("roles").get("alertChannelId"))
-        if channel is None : channel = await self.bot.fetch_channel(self.config.get("roles").get("alertChannelId"))
+
+        else :
+            channel = self.bot.get_channel(self.config.get("roles").get("alertChannelId"))
+            if channel is None : channel = await self.bot.fetch_channel(self.config.get("roles").get("alertChannelId"))
 
 
-        embed = discord.Embed(
-            title = "Nouvelle demande d'accès vidéastes",
-            description = f"**User :** {interaction.user.mention}",
-            color = discord.Color.blue()
-        )
+            embed = discord.Embed(
+                title = "Nouvelle demande d'accès vidéastes",
+                description = f"**User :** {interaction.user.mention}",
+                color = discord.Color.blue()
+            )
 
 
-        message = await channel.send(f"<@{self.config.get('roles').get('adminRoleId')}>", embed = embed, view = access.Access(self.bot))
-        await database.add_message(message.id, interaction.user.id)
+            message = await channel.send(f"<@{self.config.get('roles').get('adminRoleId')}>", embed = embed, view = access.Access(self.bot))
+            await database.add_message(message.id, interaction.user.id)
 
-        await interaction.response.send_message("Votre demande d'accès à été envoyée avec succès. Vous recevrez un message de confirmation bientôt !", ephemeral = True)
+            await interaction.response.send_message("Votre demande d'accès à été envoyée avec succès. Vous recevrez un message de confirmation bientôt !", ephemeral = True)
