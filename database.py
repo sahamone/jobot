@@ -51,8 +51,8 @@ async def get_messages(id : int) -> tuple[int, int]:
 
     if str(id) in database["messages"] :
         return (id, database["messages"][str(id)])
-    else :
-        return None
+    
+    return None
     
 
 async def save_database():

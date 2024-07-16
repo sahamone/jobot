@@ -35,7 +35,8 @@ class Choice(discord.ui.View):
             )
 
 
-            message = await channel.send(f"<@{self.config.get('roles').get('adminRoleId')}>", embed = embed, view = access.Access(self.bot))
+            adminRole = discord.utils.get(interaction.guild.roles, id = self.config.get("roles").get("adminRoleId"))
+            message = await channel.send(content = adminRole.mention, embed = embed, view = access.Access(self.bot))
             await database.add_message(message.id, interaction.user.id)
 
             await interaction.response.send_message("Votre demande d'accès à été envoyée avec succès. Vous recevrez un message de confirmation bientôt !", ephemeral = True)
