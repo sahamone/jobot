@@ -19,6 +19,11 @@ bot = discord.Bot(intents = intents)
 # Bot event (ready event)
 @bot.event
 async def on_ready():
+    print("Checking guild...")
+    for guild in bot.guilds:
+        if guild.id != config.get_config()["guild"]:
+            await guild.leave()
+    print("done !")
     print("Updating views...")
     db = await database.get_database()
     for id in db["messages"].keys():
@@ -42,6 +47,13 @@ async def on_application_command_error(ctx, error):
 
 
     await ctx.respond(embed = embed, ephemeral = True)
+
+
+@bot.event
+async def on_guild_join(guild):
+    if guild.id != config.get_config()["guild"]:
+        await guild.leave()
+
 
 
 @bot.event

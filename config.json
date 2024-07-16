@@ -1,7 +1,5 @@
 {
-    "selfConf" : {
-        "version" : "v0.1"
-    },
+    "guild" : 806589306554024008,
     "roles" : {
         "memberRoleId" : 818913086026022943,
         "videasteRoleId" : 806590612651376650,
