@@ -32,8 +32,11 @@ async def on_ready():
 
 
     try :
-        message = await bot.get_channel(db['init'][0]).fetch_message(db["init"][1])
-        print("done !")
+        channel = bot.get_channel(db['init'][0])
+        if channel is None : channel = await bot.fetch_channel(db['init'][0])
+
+        message = await channel.fetch_message(db['init'][1])
+        await message.edit(view = choice.Choice(bot))
     except :
         print("Unable to fetch init message !")
     print(f'{bot.user} has connected to Discord!')
