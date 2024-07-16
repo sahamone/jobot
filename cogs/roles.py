@@ -36,7 +36,7 @@ class Roles(commands.Cog):
     async def init(self, ctx):
         embed = discord.Embed(
             title = "Demande d'accès",
-            description = "Si vous êtes un membre de l'option cinéma, cliqué sur le bouton vert ci-dessous pour demander les accès nécéssaires",
+            description = "Si vous êtes un membre de l'option cinéma, cliquez sur le bouton ci-dessous afin de demander les accès nécéssaire à l'équipe d'administration de ce serveur Discord.",
             color = discord.Color.blue()
         )
 
