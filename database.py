@@ -75,3 +75,16 @@ async def get_conf() -> int:
     if database == None :
         await get_database()
     return database['init']
+
+
+async def delete_user(id : int) :
+    global database
+    if database == None :
+        await get_database()
+    for key in database["messages"] :
+        if database["messages"][key] == id :
+            del database["messages"][key]
+            await save_database()
+            return True
+        
+    return False

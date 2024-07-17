@@ -1,4 +1,5 @@
 import discord
+from discord.ext import commands
 from dotenv import load_dotenv
 import os
 import database
@@ -54,17 +55,26 @@ async def on_application_command_error(ctx, error):
 
     await ctx.respond(embed = embed, ephemeral = True)
 
-
 @bot.event
 async def on_guild_join(guild):
     if guild.id != config.get_config()["guild"]:
         await guild.leave()
 
-
-
 @bot.event
 async def on_message_delete(message):
     await database.remove_message(message.id, message.author.id)
+
+
+@bot.command(
+    name = "deleteme",
+    description = "Supprime l'ensemble des informations vous concernant de la base de donnée"
+)
+@commands.guild_only()
+async def deleteme(ctx):
+    if await database.delete_user(ctx.author.id):
+        await ctx.respond("Données supprimées !", ephemeral = True)
+    else :
+        await ctx.respond("Aucune donnée à supprimer !", ephemeral = True)
 
 bot.load_extension("cogs.roles")
 

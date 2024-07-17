@@ -6,5 +6,11 @@
         "profRoleId" : 826743855121432607,
         "adminRoleId" : 814811479278223360,
         "alertChannelId" : 1081578082265223219
+    },
+    "messages" : {
+        "init" : {
+            "title" : "Demande d'accès",
+            "description" : "Si tu es un membre de l'option cinéma, clique sur le bouton juste en dessous de ce message pour demander les accès nécéssaires à l'équipe d'administration du serveur Discord."
+        }
     }
 }

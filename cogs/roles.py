@@ -35,8 +35,8 @@ class Roles(commands.Cog):
     @commands.has_permissions(administrator = True)
     async def init(self, ctx):
         embed = discord.Embed(
-            title = "Demande d'accès",
-            description = "Si vous êtes un membre de l'option cinéma, cliquez sur le bouton ci-dessous afin de demander les accès nécéssaire à l'équipe d'administration de ce serveur Discord.",
+            title = self.config.get("messages").get("init").get("title"),
+            description = self.config.get("messages").get("init").get("description"),
             color = discord.Color.blue()
         )
 
