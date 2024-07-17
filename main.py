@@ -13,7 +13,7 @@ load_dotenv()
 
 
 # Creating bot instance
-intents = discord.Intents.all()
+intents = discord.Intents.default()
 bot = discord.Bot(intents = intents)
 
 
@@ -21,49 +21,64 @@ bot = discord.Bot(intents = intents)
 @bot.event
 async def on_ready():
     print("Checking guild...")
-    for guild in bot.guilds:
-        if guild.id != config.get_config()["guild"]:
+    target_guild_id = int(os.getenv("GUILD"))  
+    bot_guilds = bot.guilds  
+    for guild in bot_guilds:
+        if guild.id != target_guild_id:
             await guild.leave()
     print("done !")
     print("Updating views...")
     db = await database.get_database()
+    alert_channel_id = config.get_config()["roles"]["alertChannelId"]
+    alert_channel = bot.get_channel(alert_channel_id)
     for id in db["messages"].keys():
-        message = await bot.get_channel(config.get_config()["roles"]["alertChannelId"]).fetch_message(int(id))
-        await message.edit(view = access.Access(bot))
+        try:
+            message = await alert_channel.fetch_message(int(id))
+            await message.edit(view=access.Access(bot))
+        except Exception as e:
+            print(f"Error updating message {id}: {e}")
 
-
-    try :
-        channel = bot.get_channel(db['init'][0])
-        if channel is None : channel = await bot.fetch_channel(db['init'][0])
-
-        message = await channel.fetch_message(db['init'][1])
-        await message.edit(view = choice.Choice(bot))
-    except :
-        print("Unable to fetch init message !")
+    try:
+        channel_id, message_id = db['init']
+        channel = bot.get_channel(channel_id) or await bot.fetch_channel(channel_id)
+        message = await channel.fetch_message(message_id)
+        await message.edit(view=choice.Choice(bot))
+    except Exception as e:
+        print(f"Unable to fetch init message: {e}")
     print(f'{bot.user} has connected to Discord!')
 
 
 
 @bot.event
 async def on_application_command_error(ctx, error):
-    embed = discord.Embed(
-        title = "Une erreur est survenue",
-        description = f"```{error}```",
-        color = discord.Color.red()
-    )
+    if isinstance (error, commands.errors.CheckFailure):
+        embed = discord.Embed(
+            title = "Erreur",
+            description = "Vous n'avez pas la permissions d'utiliser cette commande !",
+            color = discord.Color.red()
+        )
+
+    elif isinstance (error, commands.errors.BotMissingPermissions):
+        embed = discord.Embed(
+            title = "Erreur",
+            description = "Je ne possède pas assez de permissions pour realiser cette commande !",
+            color = discord.Color.red()
+        )
+
+    else :
+        embed = discord.Embed(
+            title = "Erreur",
+            description = "Une erreur innatendue est survenue !",
+            color = discord.Color.red()
+        )
 
 
     await ctx.respond(embed = embed, ephemeral = True)
 
 @bot.event
 async def on_guild_join(guild):
-    if guild.id != config.get_config()["guild"]:
+    if guild.id != int(os.getenv("GUILD")):
         await guild.leave()
-
-@bot.event
-async def on_message_delete(message):
-    await database.remove_message(message.id, message.author.id)
-
 
 @bot.command(
     name = "deleteme",
