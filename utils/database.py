@@ -12,7 +12,7 @@ database = None
 async def get_database():
     global database
     if database == None :
-        with open('database.json') as f:
+        with open('utils/database.json') as f:
             database = json.load(f)
     return database
 

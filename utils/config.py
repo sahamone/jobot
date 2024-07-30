@@ -11,7 +11,7 @@ __config = None
 def get_config():
     global __config
     if __config == None :
-        with open('config.json', 'r', encoding='utf-8') as f:
+        with open('utils/config.json', 'r', encoding='utf-8') as f:
             __config = json.load(f)
 
 

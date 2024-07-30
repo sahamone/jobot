@@ -2,27 +2,23 @@ import discord
 from discord.ext import commands
 from dotenv import load_dotenv
 import os
-import database
-import config
+from utils import config, database
 from views import access, choice
-
-
 
 # Loading environment variables
 load_dotenv()
 
-
 # Creating bot instance
 intents = discord.Intents.default()
-bot = discord.Bot(intents = intents)
+bot = discord.Bot(intents=intents)
 
 
 # Bot event (ready event)
 @bot.event
 async def on_ready():
     print("Checking guild...")
-    target_guild_id = int(os.getenv("GUILD"))  
-    bot_guilds = bot.guilds  
+    target_guild_id = int(os.getenv("GUILD"))
+    bot_guilds = bot.guilds
     for guild in bot_guilds:
         if guild.id != target_guild_id:
             await guild.leave()
@@ -31,9 +27,9 @@ async def on_ready():
     db = await database.get_database()
     alert_channel_id = config.get_config()["roles"]["alertChannelId"]
     alert_channel = bot.get_channel(alert_channel_id)
-    for id in db["messages"].keys():
+    for Id in db["messages"].keys():
         try:
-            message = await alert_channel.fetch_message(int(id))
+            message = await alert_channel.fetch_message(int(Id))
             await message.edit(view=access.Access(bot))
         except Exception as e:
             print(f"Error updating message {id}: {e}")
@@ -48,48 +44,49 @@ async def on_ready():
     print(f'{bot.user} has connected to Discord!')
 
 
-
 @bot.event
 async def on_application_command_error(ctx, error):
-    if isinstance (error, commands.errors.CheckFailure):
+    if isinstance(error, commands.errors.CheckFailure):
         embed = discord.Embed(
-            title = "Erreur",
-            description = "Vous n'avez pas la permissions d'utiliser cette commande !",
-            color = discord.Color.red()
+            title="Error",
+            description="You don't have the permission to use this command!",
+            color=discord.Color.red()
         )
 
-    elif isinstance (error, commands.errors.BotMissingPermissions):
+    elif isinstance(error, commands.errors.BotMissingPermissions):
         embed = discord.Embed(
-            title = "Erreur",
-            description = "Je ne possède pas assez de permissions pour realiser cette commande !",
-            color = discord.Color.red()
+            title="Error",
+            description="I don't have enough permission to execute this command!",
+            color=discord.Color.red()
         )
 
-    else :
+    else:
         embed = discord.Embed(
-            title = "Erreur",
-            description = "Une erreur innatendue est survenue !",
-            color = discord.Color.red()
+            title="Error",
+            description="An unknown error has occurred!",
+            color=discord.Color.red()
         )
 
+    await ctx.respond(embed=embed, ephemeral=True)
 
-    await ctx.respond(embed = embed, ephemeral = True)
 
 @bot.event
 async def on_guild_join(guild):
     if guild.id != int(os.getenv("GUILD")):
         await guild.leave()
 
+
 @bot.command(
-    name = "deleteme",
-    description = "Supprime l'ensemble des informations vous concernant de la base de donnée"
+    name="deleteme",
+    description="Delete all your personal information in the database"
 )
 @commands.guild_only()
 async def deleteme(ctx):
     if await database.delete_user(ctx.author.id):
-        await ctx.respond("Données supprimées !", ephemeral = True)
-    else :
-        await ctx.respond("Aucune donnée à supprimer !", ephemeral = True)
+        await ctx.respond("Data deleted", ephemeral=True)
+    else:
+        await ctx.respond("No data to delete!", ephemeral=True)
+
 
 bot.load_extension("cogs.roles")
 

@@ -1,9 +1,5 @@
 import discord
-from discord.ext import commands
-import config
-import database
-
-
+from utils import config, database
 
 
 class Access(discord.ui.View):
