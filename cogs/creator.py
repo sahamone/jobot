@@ -20,5 +20,9 @@ class Creator(commands.Cog):
     @commands.has_permissions(administrator = True)
     @commands.guild_only()
     async def new(self, ctx):
-        modal = embedmodals.EmbedModals("Création d'un embed personalisé")
+        modal = embedmodals.EmbedModals(title="Création d'un embed personalisé")
         await ctx.send_modal(modal)
+
+
+def setup(bot):
+    bot.add_cog(Creator(bot))

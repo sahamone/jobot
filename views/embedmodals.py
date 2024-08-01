@@ -15,6 +15,7 @@ class EmbedModals(discord.ui.Modal):
             color=discord.Color.orange()
         )
 
-        await interaction.response.send_message(embed = embed)
+        await interaction.channel.send(embed=embed)
+        await interaction.response.send_message(content="Envoyé avec succès !", ephemeral=True)
 
 

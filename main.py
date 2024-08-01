@@ -47,6 +47,7 @@ async def on_ready():
 @bot.event
 async def on_application_command_error(ctx, error):
     if isinstance(error, commands.errors.CheckFailure):
+        print(error)
         embed = discord.Embed(
             title="Error",
             description="You don't have the permission to use this command!",
@@ -54,6 +55,7 @@ async def on_application_command_error(ctx, error):
         )
 
     elif isinstance(error, commands.errors.BotMissingPermissions):
+        print(error)
         embed = discord.Embed(
             title="Error",
             description="I don't have enough permission to execute this command!",
@@ -61,6 +63,7 @@ async def on_application_command_error(ctx, error):
         )
 
     else:
+        print(error)
         embed = discord.Embed(
             title="Error",
             description="An unknown error has occurred!",
@@ -89,6 +92,7 @@ async def deleteme(ctx):
 
 
 bot.load_extension("cogs.roles")
+bot.load_extension("cogs.creator")
 
 # Bot running function
 bot.run(os.getenv('DISCORD_TOKEN'))
