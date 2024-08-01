@@ -17,5 +17,3 @@ class EmbedModals(discord.ui.Modal):
 
         await interaction.channel.send(embed=embed)
         await interaction.response.send_message(content="Envoyé avec succès !", ephemeral=True)
-
-
