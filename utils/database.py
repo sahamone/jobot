@@ -1,4 +1,8 @@
 import json
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 ### DATABASE.PY ###
 # This file is used to read the database.json file and return the data as a dictionary.
@@ -12,7 +16,7 @@ database = None
 async def get_database():
     global database
     if database == None :
-        with open('utils/database.json') as f:
+        with open(os.getenv("DATABASE_PATH")) as f:
             database = json.load(f)
     return database
 

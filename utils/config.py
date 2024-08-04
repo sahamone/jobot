@@ -1,4 +1,9 @@
 import json
+import os
+from dotenv import load_dotenv
+
+
+load_dotenv()
 
 
 
@@ -7,11 +12,10 @@ import json
 #################
 
 __config = None
-
 def get_config():
     global __config
     if __config == None :
-        with open('utils/config.json', 'r', encoding='utf-8') as f:
+        with open(os.getenv("CONFIG_PATH"), 'r', encoding='utf-8') as f:
             __config = json.load(f)
 
 
